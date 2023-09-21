@@ -1,17 +1,18 @@
-const sql = require("../models/connection.model");
+const sql = require("../models/userConnection.model");
 
 const users = (req, res) => {
-  try {
-    sql.query("select * from users.users", (error, results) => {
+  try{
+    sql.query("select * from users.users;", (error, results) => {
       if (error) {
-        console.log(error);
+        res.json(error);
       }
-      res.status(200).json(results);
+      res.json(results);
     });
   } catch (err) {
     res.status(500).json({
-      message: "No user found"
+      error: "No User Found"
     });
+    res.end();
   }
 };
 
