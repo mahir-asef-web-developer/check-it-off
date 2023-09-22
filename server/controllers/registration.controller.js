@@ -18,10 +18,15 @@ const registration = async (req, res, next) => {
           res.json({
             error:
               "Authentication Faild! There is something wrong with your information. Please, check your information and try again later.",
+            success: false,
           });
           res.end();
+        } else {
+          res.json({
+            success: true,
+            result: result,
+          });
         }
-        res.json(result);
       }
     );
     jwt.sign(
@@ -38,6 +43,7 @@ const registration = async (req, res, next) => {
     res.json({
       error:
         "Authentication Faild! There is something wrong with your information. Please, check your information and try again later.",
+      success: false,
     });
     res.end();
   }

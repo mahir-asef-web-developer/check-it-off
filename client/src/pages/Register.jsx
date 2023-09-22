@@ -1,33 +1,47 @@
 import Logo from "../images/logo.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 export default function Example() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [values, setValues] = useState({});
-  const [data, setData] = useState([]);
+  const [call, setCall] = useState(false);
+  const navigateTo = useNavigate();
 
   const userResister = async (event) => {
-    try {
-      event.preventDefault();
-      setValues({
-        name,
-        email,
-        password,
-      });
-    } catch (err) {
-      console.log(err);
-    }
+    event.preventDefault();
+    setCall(true);
   };
+
   useEffect(() => {
-    fetch("/api/users", {
-      method: "GET",
-    })
-      .then((info) => setData(info))
-      .catch((err) => console.log(err));
-  }, []);
+    var information = {
+      Username: name,
+      email: email,
+      password: password,
+    };
+    information = JSON.stringify(information);
+    if (call) {
+      fetch("/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: information,
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if(res.success){
+            navigateTo("/");
+          }
+          else{
+            navigateTo("/home");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [call]);
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 pt-0 pb-12 lg:px-8">
@@ -59,7 +73,7 @@ export default function Example() {
                   maxLength={32}
                   minLength={3}
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="pl-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -81,7 +95,7 @@ export default function Example() {
                     setEmail(event.target.value);
                   }}
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="pl-3 lock w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -107,7 +121,7 @@ export default function Example() {
                   minLength={6}
                   maxLength={32}
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="pl-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -133,7 +147,6 @@ export default function Example() {
           </p>
         </div>
       </div>
-      <p>{data}</p>
     </>
   );
 }
