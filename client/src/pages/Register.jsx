@@ -19,6 +19,7 @@ export default function Example() {
       Username: name,
       email: email,
       password: password,
+      key: process.env.REACT_APP_KEY
     };
     information = JSON.stringify(information);
     if (call) {
@@ -31,12 +32,7 @@ export default function Example() {
       })
         .then((res) => res.json())
         .then((res) => {
-          if(res.success){
-            navigateTo("/");
-          }
-          else{
-            navigateTo("/home");
-          }
+          console.log(res.success);
         })
         .catch((err) => console.log(err));
     }
