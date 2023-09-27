@@ -19,7 +19,7 @@ export default function Example() {
       Username: name,
       email: email,
       password: password,
-      key: process.env.REACT_APP_KEY
+      key: process.env.REACT_APP_KEY,
     };
     information = JSON.stringify(information);
     if (call) {
@@ -32,7 +32,11 @@ export default function Example() {
       })
         .then((res) => res.json())
         .then((res) => {
-          console.log(res.success);
+          if (res.success) {
+            navigateTo("/tasks", { state: { success: true } });
+          } else {
+            navigateTo("/", { state: { success: false } });
+          }
         })
         .catch((err) => console.log(err));
     }

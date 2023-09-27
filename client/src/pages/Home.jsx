@@ -1,9 +1,26 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import SuccessDialog from "../components/SuccessDialog";
 
 export default function Home() {
+  const location = useLocation();
+  var successDialogRenderer = null;
+  if (location.state) {
+    if (!location.state.success) {
+      successDialogRenderer = (
+        <SuccessDialog
+          title={"Authentication failed!"}
+          description={
+            "Authentication failed. Your credentials are incorrect. Please double-check your username and password and try again. If the issue persists, contact our support team for assistance. Your security is important to us."
+          }
+          openstate={true}
+        />
+      );
+    }
+  }
   return (
     <div>
+      {successDialogRenderer}
         <div className="bg-white">
       <div className="relative isolate px-6 pt-0 lg:px-8">
         <div
