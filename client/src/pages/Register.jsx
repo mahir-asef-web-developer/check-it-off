@@ -23,7 +23,7 @@ export default function Example() {
     };
     information = JSON.stringify(information);
     if (call) {
-      fetch("/api/users", {
+      fetch("/api/users/registration", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

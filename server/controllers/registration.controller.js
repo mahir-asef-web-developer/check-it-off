@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
-const registration = async (req, res, next) => {
+const registration = async (req, res) => {
   try {
     const uuid = crypto.randomUUID();
     const { Username, email, password } = res.info;
