@@ -1,32 +1,39 @@
 import Logo from "../images/logo.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [call, setCall] = useState(false);
   const navigateTo = useNavigate();
 
   const login = (event) => {
     event.preventDefault();
-    fetch("/api/users/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.success) {
+    setCall(true);
+  };
+
+  useEffect(() => {
+    if (call) {
+      fetch("/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      })
+        .then((res) => res.json())
+        .then((res) => {
           if (res.success) {
+            console.log(res.token);
             navigateTo("/tasks", { state: { success: true } });
           } else {
+            console.log(res.token);
             navigateTo("/", { state: { success: false } });
           }
-        }
-      });
-  };
+        });
+    }
+  }, [call]);
 
   return (
     <>

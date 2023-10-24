@@ -9,34 +9,41 @@ const login = (req, res) => {
       "select * from users.users where email = ?;",
       [email],
       async (err, result) => {
-        if(err){
+        if (err) {
+          res.json({
+            message:
+              "Authentication faild! Please try again later with valid information.",
+            success: false,
+          });
+          res.end();
+        } else {
+          const dbPassword = result[0].password;
+          const isAuthenticated = await bcrypt.compare(password, dbPassword);
+          const uuid = result[0].ID;
+          const Username = result[0].Username;
+          if (isAuthenticated) {
+            const token = jwt.sign(
+              {
+                uuid: uuid,
+                Username: Username,
+              },
+              process.env.JWT_PRIVATE_KEY,
+              {
+                expiresIn: "15d",
+              }
+            );
             res.json({
-                message: "Authentication faild! Please try again later with valid information.",
-                success: false
+              result: result,
+              token: token,
+              success: true,
             });
-            res.end()
-        }else{
-            const dbPassword = result[0].password
-            const isAuthenticated = await bcrypt.compare(password, dbPassword);
-            const uuid = result[0].ID;
-            const Username = result[0].Username;
-            if(isAuthenticated){
-                jwt.sign(
-                    {
-                      uuid: uuid,
-                      Username: Username,
-                    },
-                    process.env.JWT_PRIVATE_KEY,
-                    {
-                      expiresIn: "15d",
-                    }
-                  );
-            }
+            res.end();
+          } else {
             res.json({
-                result: result,
-                success:isAuthenticated
+              result: result,
+              success: false,
             });
-            res.end()
+          }
         }
       }
     );
